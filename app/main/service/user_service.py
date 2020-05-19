@@ -1,6 +1,3 @@
-import uuid
-import datetime
-
 from app.main import db
 from app.main.model.user import User
 
@@ -9,14 +6,11 @@ def save_new_user(data):
     """
     Create User
     """
-    user = User.query.filter_by(email=data['email']).first()
+    user = User.query.filter_by(username=data['username']).first()
     if not user:
         new_user = User(
-            public_id=str(uuid.uuid4()),
-            email=data['email'],
             username=data['username'],
-            password=data['password'],
-            registered_on=datetime.datetime.utcnow()
+            password=data['password']
         )
         save_changes(new_user)
         return generate_token(new_user)
@@ -34,11 +28,11 @@ def get_all_users():
     return User.query.all()
 
 
-def get_a_user(public_id):
+def get_a_user(user_id):
     """
     one user
     """
-    return User.query.filter_by(public_id=public_id).first()
+    return User.query.filter_by(id=user_id).first()
 
 
 def generate_token(user):

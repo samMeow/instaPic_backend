@@ -1,8 +1,6 @@
 # pylint: disable=missing-class-docstring, missing-function-docstring
 import unittest
 
-import datetime
-
 from app.main import db
 from app.main.model.user import User
 from app.test.base import BaseTestCase
@@ -12,9 +10,8 @@ class TestUserModel(BaseTestCase):
 
     def test_encode_auth_token(self):
         user = User(
-            email='test@test.com',
-            password='test',
-            registered_on=datetime.datetime.utcnow()
+            username='test@test.com',
+            password='test'
         )
         db.session.add(user)
         db.session.commit()
@@ -23,9 +20,8 @@ class TestUserModel(BaseTestCase):
 
     def test_decode_auth_token(self):
         user = User(
-            email='test@test.com',
-            password='test',
-            registered_on=datetime.datetime.utcnow()
+            username='test@test.com',
+            password='test'
         )
         db.session.add(user)
         db.session.commit()
