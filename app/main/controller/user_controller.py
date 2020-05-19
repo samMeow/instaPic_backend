@@ -11,6 +11,10 @@ _user = UserDto.user
 
 @api.route('/')
 class UserList(Resource):
+    # pylint: disable=no-self-use
+    """
+    User list route
+    """
     @api.doc('list_of_registered_users')
     @admin_token_required
     @api.marshal_list_with(_user, envelope='data')
@@ -22,7 +26,7 @@ class UserList(Resource):
     @api.response(201, 'User successfully created.')
     @api.doc('create a new user')
     def post(self):
-        """Creates a new User """
+        """Creates a new User"""
         data = request.json
         return save_new_user(data=data)
 
@@ -31,15 +35,15 @@ class UserList(Resource):
 @api.param('public_id', 'The User identifier')
 @api.response(404, 'User not found.')
 class User(Resource):
+    # pylint: disable=no-self-use
+    """
+    User detail Route
+    """
     @api.doc('get a user')
     @api.marshal_with(_user)
     def get(self, public_id):
         """get a user given its identifier"""
         user = get_a_user(public_id)
         if not user:
-            api.abort(404)
-        else:
-            return user
-
-
-
+            return api.abort(404)
+        return user

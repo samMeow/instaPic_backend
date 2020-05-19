@@ -4,16 +4,17 @@ clean:
 	find . -type f -name '*.pyc' -delete
 	find . -type f -name '*.log' -delete
 
-system-packages:
-	sudo apt install python-pip -y
-
-python-packages:
+install:
 	pip install -r requirements.txt
-
-install: system-packages python-packages
 
 tests:
 	python manage.py test
+
+lint:
+	pylint ./app
+
+lint-fix:
+	autopep8 --in-place --aggressive --aggressive ./app/**/*.py
 
 run:
 	python manage.py run

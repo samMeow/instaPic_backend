@@ -6,6 +6,9 @@ from app.main.model.user import User
 
 
 def save_new_user(data):
+    """
+    Create User
+    """
     user = User.query.filter_by(email=data['email']).first()
     if not user:
         new_user = User(
@@ -17,23 +20,32 @@ def save_new_user(data):
         )
         save_changes(new_user)
         return generate_token(new_user)
-    else:
-        response_object = {
-            'status': 'fail',
-            'message': 'User already exists. Please Log in.',
-        }
-        return response_object, 409
+    response_object = {
+        'status': 'fail',
+        'message': 'User already exists. Please Log in.',
+    }
+    return response_object, 409
 
 
 def get_all_users():
+    """
+    All user list
+    """
     return User.query.all()
 
 
 def get_a_user(public_id):
+    """
+    one user
+    """
     return User.query.filter_by(public_id=public_id).first()
 
 
 def generate_token(user):
+    # pylint: disable=broad-except
+    """
+    Get JWT token
+    """
     try:
         # generate the auth token
         auth_token = User.encode_auth_token(user.id)
@@ -43,7 +55,7 @@ def generate_token(user):
             'Authorization': auth_token.decode()
         }
         return response_object, 201
-    except Exception as e:
+    except Exception:
         response_object = {
             'status': 'fail',
             'message': 'Some error occurred. Please try again.'
@@ -52,6 +64,8 @@ def generate_token(user):
 
 
 def save_changes(data):
+    """
+    Commit user data to db
+    """
     db.session.add(data)
     db.session.commit()
-

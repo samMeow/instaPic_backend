@@ -5,6 +5,10 @@ from app.main.model.blacklist import BlacklistToken
 
 
 def save_token(token):
+    # pylint: disable=no-member, broad-except
+    """
+    save expired JWT token
+    """
     blacklist_token = BlacklistToken(token=token)
     try:
         # insert the token
@@ -15,9 +19,9 @@ def save_token(token):
             'message': 'Successfully logged out.'
         }
         return response_object, 200
-    except Exception as e:
+    except Exception as err:
         response_object = {
             'status': 'fail',
-            'message': e
+            'message': err
         }
         return response_object, 200

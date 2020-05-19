@@ -1,12 +1,16 @@
 
-from .. import db, flask_bcrypt
 import datetime
-from app.main.model.blacklist import BlacklistToken
-from ..config import key
 import jwt
+
+from app.main.model.blacklist import BlacklistToken
+
+from ..config import key
+from .. import db, flask_bcrypt
+
 
 
 class User(db.Model):
+    # pylint: disable=no-member
     """ User Model for storing user related details """
     __tablename__ = "user"
 
@@ -20,17 +24,27 @@ class User(db.Model):
 
     @property
     def password(self):
+        """
+        Read password
+        """
         raise AttributeError('password: write-only field')
 
     @password.setter
     def password(self, password):
+        """
+        password setter
+        """
         self.password_hash = flask_bcrypt.generate_password_hash(password).decode('utf-8')
 
     def check_password(self, password):
+        """
+        password check
+        """
         return flask_bcrypt.check_password_hash(self.password_hash, password)
 
     @staticmethod
     def encode_auth_token(user_id):
+        # pylint: disable=broad-except
         """
         Generates the Auth Token
         :return: string
@@ -46,8 +60,8 @@ class User(db.Model):
                 key,
                 algorithm='HS256'
             )
-        except Exception as e:
-            return e
+        except Exception as err:
+            return err
 
     @staticmethod
     def decode_auth_token(auth_token):
@@ -61,8 +75,7 @@ class User(db.Model):
             is_blacklisted_token = BlacklistToken.check_blacklist(auth_token)
             if is_blacklisted_token:
                 return 'Token blacklisted. Please log in again.'
-            else:
-                return payload['sub']
+            return payload['sub']
         except jwt.ExpiredSignatureError:
             return 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:

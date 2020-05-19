@@ -3,9 +3,17 @@ from ..service.blacklist_service import save_token
 
 
 class Auth:
+    """
+    Auth service
+    """
+    # pylint: disable=inconsistent-return-statements
 
     @staticmethod
     def login_user(data):
+        # pylint: disable=broad-except
+        """
+        login a user
+        """
         try:
             # fetch the user data
             user = User.query.filter_by(email=data.get('email')).first()
@@ -25,8 +33,8 @@ class Auth:
                 }
                 return response_object, 401
 
-        except Exception as e:
-            print(e)
+        except Exception as err:
+            print(err)
             response_object = {
                 'status': 'fail',
                 'message': 'Try again'
@@ -35,6 +43,9 @@ class Auth:
 
     @staticmethod
     def logout_user(data):
+        """
+        Logout out user from request
+        """
         if data:
             auth_token = data.split(" ")[1]
         else:
@@ -44,21 +55,22 @@ class Auth:
             if not isinstance(resp, str):
                 # mark the token as blacklisted
                 return save_token(token=auth_token)
-            else:
-                response_object = {
-                    'status': 'fail',
-                    'message': resp
-                }
-                return response_object, 401
-        else:
             response_object = {
                 'status': 'fail',
-                'message': 'Provide a valid auth token.'
+                'message': resp
             }
-            return response_object, 403
+            return response_object, 401
+        response_object = {
+            'status': 'fail',
+            'message': 'Provide a valid auth token.'
+        }
+        return response_object, 403
 
     @staticmethod
     def get_logged_in_user(new_request):
+        """
+        Get user info from request
+        """
         # get the auth token
         auth_token = new_request.headers.get('Authorization')
         if auth_token:
@@ -80,9 +92,8 @@ class Auth:
                 'message': resp
             }
             return response_object, 401
-        else:
-            response_object = {
-                'status': 'fail',
-                'message': 'Provide a valid auth token.'
-            }
-            return response_object, 401
+        response_object = {
+            'status': 'fail',
+            'message': 'Provide a valid auth token.'
+        }
+        return response_object, 401

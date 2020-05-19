@@ -5,8 +5,11 @@ from flask import request
 from app.main.service.auth_helper import Auth
 
 
-def token_required(f):
-    @wraps(f)
+def token_required(func):
+    """
+    JWT middleware
+    """
+    @wraps(func)
     def decorated(*args, **kwargs):
 
         data, status = Auth.get_logged_in_user(request)
@@ -15,13 +18,16 @@ def token_required(f):
         if not token:
             return data, status
 
-        return f(*args, **kwargs)
+        return func(*args, **kwargs)
 
     return decorated
 
 
-def admin_token_required(f):
-    @wraps(f)
+def admin_token_required(func):
+    """
+    admin JWT middleware
+    """
+    @wraps(func)
     def decorated(*args, **kwargs):
 
         data, status = Auth.get_logged_in_user(request)
@@ -38,6 +44,6 @@ def admin_token_required(f):
             }
             return response_object, 401
 
-        return f(*args, **kwargs)
+        return func(*args, **kwargs)
 
     return decorated

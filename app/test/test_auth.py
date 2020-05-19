@@ -1,8 +1,9 @@
+# pylint: disable=missing-class-docstring, missing-function-docstring
 import unittest
+import json
 
 from app.main import db
 from app.main.model.blacklist import BlacklistToken
-import json
 from app.test.base import BaseTestCase
 
 
@@ -82,7 +83,8 @@ class TestAuthBlueprint(BaseTestCase):
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'fail')
             print(data['message'])
-            self.assertTrue(data['message'] == 'email or password does not match.')
+            self.assertTrue(
+                data['message'] == 'email or password does not match.')
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 401)
 
@@ -156,7 +158,8 @@ class TestAuthBlueprint(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'fail')
-            self.assertTrue(data['message'] == 'Token blacklisted. Please log in again.')
+            self.assertTrue(
+                data['message'] == 'Token blacklisted. Please log in again.')
             self.assertEqual(response.status_code, 401)
 
 
