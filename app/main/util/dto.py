@@ -47,6 +47,18 @@ class AuthDto:
         ),
     })
 
+def numeric_list(value):
+    """
+    parse CSV to numeric integer
+    """
+    if not value:
+        return None
+    temp = value.split(',')
+    if not all([v.isnumeric() for v in temp]):
+        raise ValueError('Unable to parse as integer list')
+    return [int(v) for v in temp]
+
+numeric_list.__schema__ = {'type': 'string', 'format': 'comma separate integer'}
 class PostDto:
     """
     Post data model
@@ -63,11 +75,40 @@ class PostDto:
         'user_id': fields.Integer(description='post creator'),
         'create_time': fields.DateTime(),
     })
+    post_list = api.model('post_list', {
+        'data': fields.List(fields.Nested(post)),
+        'meta': fields.Nested({
+            'has_next_page': fields.Boolean()
+        })
+    })
 
     upload_post = api.parser()
     upload_post.bundle_errors = True
     upload_post.add_argument('description', location='form', type=str, required=True)
     upload_post.add_argument('media', location='files', type=FileStorage)
+
+    post_search = api.parser()
+    post_search.bundle_errors = True
+    post_search.add_argument(
+        'sort',
+        location='args', type=str, default='create_time', choices=('create_time')
+    )
+    post_search.add_argument(
+        'order',
+        location='args', type=str, default='esc', choices=('asc', 'desc')
+    )
+    post_search.add_argument(
+        'filters[user_ids]',
+        location='args', type=numeric_list
+    )
+    post_search.add_argument(
+        'page[number]',
+        location='args', type=int, default=0
+    )
+    post_search.add_argument(
+        'page[size]',
+        location='args', type=int, default=20
+    )
 
 class MediaDto:
     """

@@ -10,6 +10,8 @@ from ..util.decorator import token_required
 api = PostDto.api
 _post = PostDto.post
 _upload_post = PostDto.upload_post
+_post_search = PostDto.post_search
+_post_list = PostDto.post_list
 
 @api.route('')
 class PostList(Resource):
@@ -17,11 +19,28 @@ class PostList(Resource):
     """
     Post list route
     """
+    @api.expect(_post_search, validate=True)
     @api.doc('list all post')
-    @api.marshal_list_with(_post, envelope='data')
+    @api.marshal_with(_post_list)
     def get(self):
         """List all registered users"""
-        return PostService.list_post(20, 0)
+        args = _post_search.parse_args()
+        data = PostService.list_post(
+            filters={
+                'user_ids': args['filters[user_ids]']
+            },
+            limit=args['page[size]'] + 1,
+            offset=args['page[number]'] * args['page[size]'],
+            sort=args['sort'],
+            order=args['order']
+        )
+        response = {
+            'meta': {
+                'has_next_page': len(data) == args['page[size]'] + 1
+            },
+            'data': data[0:args['page[size]']]
+        }
+        return response, 200
 
     @token_required
     @api.response(201, 'Post successfully created.')

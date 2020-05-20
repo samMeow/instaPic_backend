@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
+from werkzeug.exceptions import InternalServerError
 
 ENV = os.getenv('BOILERPLATE_ENV') or 'dev'
 env_path = Path('.') / ('.env.' + ENV)

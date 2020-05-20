@@ -27,10 +27,28 @@ class PostService:
         return errors
 
     @staticmethod
-    def list_post(limit, offset):
+    def list_post(filters=None, limit=None, offset=None, sort=None, order=None):
         """search post"""
-        data = Post.query.limit(limit).offset(offset).all()
-        return data
+        query = Post.query
+        if filters:
+            if filters['user_ids']:
+                query = query.filter(Post.user_id.in_(filters['user_ids']))
+
+        allowed_sort = {
+            'create_time': Post.create_time
+        }
+        if sort:
+            sort = allowed_sort[sort]
+            if order == 'desc':
+                sort = sort.desc()
+            query = query.order_by(sort)
+
+        if limit:
+            query = query.limit(limit)
+        if offset:
+            query = query.limit(offset)
+
+        return query.all()
 
     @staticmethod
     def create_post(description, media, user_id):
