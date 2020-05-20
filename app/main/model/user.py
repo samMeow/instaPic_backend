@@ -16,6 +16,9 @@ class User(db.Model):
     username = db.Column(db.String(255), unique=True, nullable=False)
     password_hash = db.Column(db.String(100))
 
+    # no need to create index for username search
+    # as it has unique idx
+
     @property
     def password(self):
         """

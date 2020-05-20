@@ -12,6 +12,8 @@ class Config:
             os.path.dirname(__file__), os.pardir, os.pardir, os.getenv('UPLOAD_DIR', 'uploads')
         )
     )
+    AWS_BUCKET_NAME = os.getenv('AWS_BUCKET_NAME', '')
+    AWS_BUCKET_PATH = os.getenv('AWS_BUCKET_PATH', '')
 
 class DevelopmentConfig(Config):
     # uncomment the line below to use postgres

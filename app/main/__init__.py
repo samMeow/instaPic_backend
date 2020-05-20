@@ -1,12 +1,13 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+import boto3
 
 from .config import config_by_name
 
 db = SQLAlchemy()
 flask_bcrypt = Bcrypt()
-
+s3 = boto3.client('s3')
 
 def create_app(config_name):
     """

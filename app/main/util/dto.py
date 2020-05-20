@@ -57,10 +57,18 @@ class PostDto:
             description='Post short description',
             max_length=4000,
         ),
-        'image': fields.String(description='post image path')
+        'media': fields.String(description='post image path'),
+        'user_id': fields.Integer(description='post creator'),
+        'create_time': fields.DateTime(),
     })
 
     upload_post = api.parser()
     upload_post.bundle_errors = True
     upload_post.add_argument('description', location='form', type=str, required=True)
     upload_post.add_argument('media', location='files', type=FileStorage)
+
+class MediaDto:
+    """
+    Image operation
+    """
+    api = Namespace('media', description="Media related operation")

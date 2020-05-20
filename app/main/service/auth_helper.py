@@ -74,7 +74,7 @@ class Auth:
         # get the auth token
         auth_token = new_request.headers.get('Authorization')
         if auth_token:
-            resp = User.decode_auth_token(auth_token)
+            resp = User.decode_auth_token(remove_prefix(auth_token, 'Bearer '))
             if not isinstance(resp, str):
                 user = User.query.filter_by(id=resp).first()
                 response_object = {
@@ -95,3 +95,19 @@ class Auth:
             'message': 'Provide a valid auth token.'
         }
         return response_object, 401
+
+    @staticmethod
+    def get_current_user(new_request):
+        """
+        get current JWT user id
+        """
+        auth_token = new_request.headers.get('Authorization')
+        if auth_token:
+            return User.decode_auth_token(remove_prefix(auth_token, 'Bearer '))
+        return None
+
+def remove_prefix(text, prefix):
+    """remove prefix helper"""
+    if text.startswith(prefix):
+        return text[len(prefix):]
+    return text
