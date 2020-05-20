@@ -2,10 +2,12 @@ from flask import request
 from flask_restplus import Resource
 
 from ..util.dto import UserDto
-from ..service.user_service import save_new_user, get_all_users, get_a_user
+from ..service.user_service import save_new_user, search_user, get_a_user
+from ..util.decorator import token_required
 
 api = UserDto.api
 _user = UserDto.user
+_user_search = UserDto.user_search
 
 
 @api.route('')
@@ -14,11 +16,14 @@ class UserList(Resource):
     """
     User list route
     """
+    @token_required
+    @api.expect(_user_search, validate=True)
     @api.doc('list_of_registered_users')
     @api.marshal_list_with(_user, envelope='data')
     def get(self):
         """List all registered users"""
-        return get_all_users()
+        args = _user_search.parse_args()
+        return search_user(username=args['username'])
 
     @api.expect(_user, validate=True)
     @api.response(201, 'User successfully created.')

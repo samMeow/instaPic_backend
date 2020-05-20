@@ -23,6 +23,8 @@ class UserDto:
             max_length=255
         )
     })
+    user_search = api.parser()
+    user_search.add_argument('username', location='args', type=str)
 
 
 class AuthDto:

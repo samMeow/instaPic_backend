@@ -20,13 +20,15 @@ def save_new_user(data):
     }
     return response_object, 409
 
-
-def get_all_users():
+def search_user(username):
     """
-    All user list
+    search by allowed filters
     """
-    return User.query.all()
-
+    query = User.query
+    if username:
+        search = "{}%".format(username.replace('%', r'\%'))
+        query = query.filter(User.username.like(search))
+    return query.all()
 
 def get_a_user(user_id):
     """
