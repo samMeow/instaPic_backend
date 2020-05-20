@@ -1,4 +1,5 @@
 from flask_restplus import Namespace, fields
+from werkzeug.datastructures import FileStorage
 
 # pylint: disable=too-few-public-methods
 
@@ -8,6 +9,7 @@ class UserDto:
     """
     api = Namespace('user', description='user related operations')
     user = api.model('user', {
+        'id': fields.Integer(description='user id'),
         'username': fields.String(
             required=True,
             description='user username',
@@ -42,3 +44,23 @@ class AuthDto:
             max_length=255
         ),
     })
+
+class PostDto:
+    """
+    Post data model
+    """
+    api = Namespace('post', description="post related operations")
+    post = api.model('post', {
+        'id': fields.Integer(description='post id'),
+        'description': fields.String(
+            required=True,
+            description='Post short description',
+            max_length=4000,
+        ),
+        'image': fields.String(description='post image path')
+    })
+
+    upload_post = api.parser()
+    upload_post.bundle_errors = True
+    upload_post.add_argument('description', location='form', type=str, required=True)
+    upload_post.add_argument('media', location='files', type=FileStorage)

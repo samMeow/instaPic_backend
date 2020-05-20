@@ -25,6 +25,9 @@ migrate = Migrate(app, db)
 
 manager.add_command('db', MigrateCommand)
 
+# Max 4 MB
+app.config['MAX_CONTENT_LENGTH'] = 4 * 1024 * 1024
+
 @manager.command
 def run():
     app.run()
