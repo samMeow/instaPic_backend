@@ -74,6 +74,7 @@ class PostDto:
         'media': fields.String(description='post image path'),
         'user_id': fields.Integer(description='post creator'),
         'create_time': fields.DateTime(),
+        'user': fields.Nested(UserDto.user)
     })
     post_list = api.model('post_list', {
         'data': fields.List(fields.Nested(post)),

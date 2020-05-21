@@ -1,4 +1,5 @@
 import magic
+from sqlalchemy.orm import lazyload
 
 from ..model.post import Post
 from .. import db
@@ -48,7 +49,7 @@ class PostService:
         if offset:
             query = query.limit(offset)
 
-        return query.all()
+        return query.options(lazyload('user')).all()
 
     @staticmethod
     def create_post(description, media, user_id):

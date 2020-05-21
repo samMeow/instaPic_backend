@@ -15,12 +15,15 @@ class Post(db.Model):
     media = db.Column(db.String(255))
     user_id = db.Column(db.Integer, nullable=False)
     create_time = db.Column(db.DateTime, nullable=False, server_default=func.now())
+    user = db.relationship('User', lazy='selectin')
 
-    ForeignKeyConstraint(
-        ['user_id'], ['users.id'],
-        name='fk_posts_user_id'
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ['user_id'], ['users.id'],
+            name='fk_posts_user_id'
+        ),
+        # sort by time
+        Index('idx_posts_create_time', 'create_time'),
+        # use for filter and sort by create time
+        Index('idx_posts_user_id_create_time', 'user_id', 'create_time')
     )
-    # sort by time
-    Index('idx_posts_create_time', 'create_time')
-    # use for filter and sort by create time
-    Index('idx_posts_user_id_create_time', 'user_id', 'create_time')

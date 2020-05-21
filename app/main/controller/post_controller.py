@@ -25,6 +25,7 @@ class PostList(Resource):
     def get(self):
         """List all registered users"""
         args = _post_search.parse_args()
+        # not using sqlalchemy pagination as it use (slow) count query
         data = PostService.list_post(
             filters={
                 'user_ids': args['filters[user_ids]']
