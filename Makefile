@@ -8,7 +8,7 @@ install:
 	pip install -r requirements.txt
 
 tests:
-	python manage.py test
+	APP_ENV=test python manage.py test
 
 lint:
 	pylint ./app

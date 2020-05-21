@@ -23,3 +23,14 @@ class MediaHelper:
             print(err)
             return None
         return Config.AWS_BUCKET_PATH + '/' + object_name
+
+    @staticmethod
+    def del_file(object_name):
+        # pylint: disable=broad-except
+        """DEL s3 object"""
+        try:
+            s3.delete_object(Bucket=Config.AWS_BUCKET_NAME, Key=object_name)
+        except Exception as err:
+            print(err)
+            return False
+        return True

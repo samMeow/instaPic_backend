@@ -60,10 +60,13 @@ class PostList(Resource):
         err = PostService.validate_post(args)
         if err:
             api.abort(400, message='Invalid request', errors=err)
-        media_type = PostService.determine_media_type(file)
-        media_url = MediaHelper.save_file(file)
-        if not media_url:
-            api.abort(400, message='Fail to save media')
+        media_type = None
+        media_url = None
+        if file:
+            media_type = PostService.determine_media_type(file)
+            media_url = MediaHelper.save_file(file)
+            if not media_url:
+                api.abort(400, message='Fail to save media')
         post = PostService.create_post(
             description=args['description'],
             media_type=media_type,

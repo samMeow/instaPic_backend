@@ -19,7 +19,7 @@ class PostService:
             errors['description'] = 'Description too long (>4000 character)'
         if data['media'] and data['media'].filename == '':
             errors['media'] = 'Media should have a valid filename'
-        else:
+        elif data['media']:
             file = data['media']
             buffer = file.read(1024)
             file.seek(0)
@@ -54,7 +54,7 @@ class PostService:
 
     # atomic
     @staticmethod
-    def create_post(description, media_url, media_type, user_id):
+    def create_post(description, user_id, media_url=None, media_type=None):
         # pylint: disable=broad-except
         """create new post"""
         try:
@@ -65,12 +65,13 @@ class PostService:
             )
             db.session.add(new_post)
             db.session.flush()
-            new_media = PostMedia(
-                post_id=new_post.id,
-                path=media_url,
-                media_type=media_type
-            )
-            db.session.add(new_media)
+            if media_url:
+                new_media = PostMedia(
+                    post_id=new_post.id,
+                    path=media_url,
+                    media_type=media_type
+                )
+                db.session.add(new_media)
             db.session.commit()
         except Exception as err:
             print(err)
