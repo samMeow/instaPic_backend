@@ -9,6 +9,7 @@ class Config:
     DEBUG = False
     AWS_BUCKET_NAME = os.getenv('AWS_BUCKET_NAME', '')
     AWS_BUCKET_PATH = os.getenv('AWS_BUCKET_PATH', '')
+    ALLOWED_ORIGIN = os.getenv('ALLOWED_ORIGIN', '')
 
 class DevelopmentConfig(Config):
     # uncomment the line below to use postgres

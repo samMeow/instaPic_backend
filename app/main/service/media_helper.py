@@ -7,6 +7,8 @@ from ..config import Config
 
 # pylint: disable=too-few-public-methods
 
+# no need to gzip as it doesn't help much
+# can consider image lossy compression
 class MediaHelper:
     """Media Helping service"""
 

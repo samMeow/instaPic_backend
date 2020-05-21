@@ -19,4 +19,9 @@ lint-fix:
 run:
 	python manage.py run
 
+db-up:
+	python manage.py db init
+	python manage.py db migrate -m 'init DB'
+	python manage.py db upgrade
+
 all: clean install tests run
