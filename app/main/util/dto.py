@@ -80,14 +80,15 @@ class PostDto:
         ),
         'medias': fields.List(fields.Nested(post_media), description='all medias'),
         'user_id': fields.Integer(description='post creator'),
-        'create_time': fields.DateTime(),
-        'user': fields.Nested(UserDto.user),
+        'create_time': fields.DateTime(description='create time'),
+        'user': fields.Nested(UserDto.user, description='user from user_id'),
+    })
+    meta = api.model('meta', {
+        'has_next_page': fields.Boolean(description='has next page')
     })
     post_list = api.model('post_list', {
-        'data': fields.List(fields.Nested(post)),
-        'meta': fields.Nested({
-            'has_next_page': fields.Boolean()
-        })
+        'data': fields.List(fields.Nested(post), description='list of post'),
+        'meta': fields.Nested(meta, description='Metadata')
     })
 
     upload_post = api.parser()
@@ -103,7 +104,7 @@ class PostDto:
     )
     post_search.add_argument(
         'order',
-        location='args', type=str, default='esc', choices=('asc', 'desc')
+        location='args', type=str, default='desc', choices=('asc', 'desc')
     )
     post_search.add_argument(
         'filters[user_ids]',
@@ -117,9 +118,3 @@ class PostDto:
         'page[size]',
         location='args', type=int, default=20
     )
-
-class MediaDto:
-    """
-    Image operation
-    """
-    api = Namespace('media', description="Media related operation")

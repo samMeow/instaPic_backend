@@ -21,6 +21,7 @@ class PostList(Resource):
     """
     @api.expect(_post_search, validate=True)
     @api.doc('list all post')
+    @api.response(200, 'list of posts with pagination meta')
     @api.marshal_with(_post_list)
     def get(self):
         """List all registered users"""
@@ -46,6 +47,8 @@ class PostList(Resource):
     @token_required
     @api.response(201, 'Post successfully created.')
     @api.doc('create a new post')
+    @api.response(201, 'successfully create post')
+    @api.response(400, 'validation error')
     @api.expect(_upload_post, validate=True)
     @api.marshal_with(_post, envelope='data')
     def post(self):

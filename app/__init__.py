@@ -10,16 +10,17 @@ from .main.config import Config
 blueprint = Blueprint('api', __name__)
 
 
-api = Api(blueprint,
-          title='FLASK RESTPLUS API BOILER-PLATE WITH JWT',
-          version='1.0',
-          description='a boilerplate for flask restplus web service'
-          )
-
+api = Api(
+    blueprint,
+    title='FLASK RESTPLUS API BOILER-PLATE WITH JWT',
+    version='1.0',
+    description='a boilerplate for flask restplus web service',
+    doc='/docs/'
+)
+init_error_handler(blueprint)
 api.add_namespace(user_ns, path='/users')
 api.add_namespace(post_ns, path='/posts')
 api.add_namespace(auth_ns)
-init_error_handler(blueprint)
 
 @blueprint.after_request
 def after_request(response):

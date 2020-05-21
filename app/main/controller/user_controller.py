@@ -18,7 +18,8 @@ class UserList(Resource):
     """
     @token_required
     @api.expect(_user_search, validate=True)
-    @api.doc('list_of_registered_users')
+    @api.doc('search user by username')
+    @api.response(200, 'List of users')
     @api.marshal_list_with(_user, envelope='data')
     def get(self):
         """List all registered users"""
