@@ -64,6 +64,13 @@ class PostDto:
     Post data model
     """
     api = Namespace('post', description="post related operations")
+    post_media = api.model('post_media', {
+        'id': fields.Integer(description='post media id'),
+        'post_id': fields.Integer(description='parent post id'),
+        'media_type': fields.String(description='media type video / image'),
+        'path': fields.String(description='public url to access media'),
+        'create_time': fields.DateTime(description='create date time')
+    })
     post = api.model('post', {
         'id': fields.Integer(description='post id'),
         'description': fields.String(
@@ -71,10 +78,10 @@ class PostDto:
             description='Post short description',
             max_length=4000,
         ),
-        'media': fields.String(description='post image path'),
+        'medias': fields.List(fields.Nested(post_media), description='all medias'),
         'user_id': fields.Integer(description='post creator'),
         'create_time': fields.DateTime(),
-        'user': fields.Nested(UserDto.user)
+        'user': fields.Nested(UserDto.user),
     })
     post_list = api.model('post_list', {
         'data': fields.List(fields.Nested(post)),

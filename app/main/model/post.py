@@ -12,10 +12,11 @@ class Post(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     description = db.Column(db.Text, nullable=False)
-    media = db.Column(db.String(255))
     user_id = db.Column(db.Integer, nullable=False)
     create_time = db.Column(db.DateTime, nullable=False, server_default=func.now())
+
     user = db.relationship('User', lazy='selectin')
+    medias = db.relationship('PostMedia', lazy='selectin')
 
     __table_args__ = (
         ForeignKeyConstraint(

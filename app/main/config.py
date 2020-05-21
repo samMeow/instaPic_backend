@@ -7,11 +7,6 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY', 'my_precious_secret_key')
     DEBUG = False
-    UPLOAD_DIR = os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__), os.pardir, os.pardir, os.getenv('UPLOAD_DIR', 'uploads')
-        )
-    )
     AWS_BUCKET_NAME = os.getenv('AWS_BUCKET_NAME', '')
     AWS_BUCKET_PATH = os.getenv('AWS_BUCKET_PATH', '')
 

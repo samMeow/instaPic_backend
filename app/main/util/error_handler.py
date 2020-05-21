@@ -1,8 +1,7 @@
-from werkzeug.exceptions import HTTPException
 import traceback
+from werkzeug.exceptions import HTTPException
 
-
-def handle_500(err):
+def global_handler(err):
     """
     handle all exception
     """
@@ -12,9 +11,9 @@ def handle_500(err):
         code = err.code
     return {'message': str(err)}, code
 
-def global_handler(app):
+def init_error_handler(app):
     """
     init app with handler
     """
-    app.register_error_handler(Exception, handle_500)
+    app.register_error_handler(Exception, global_handler)
     return app
