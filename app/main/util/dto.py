@@ -46,6 +46,11 @@ class AuthDto:
             max_length=255
         ),
     })
+    auth_response = api.model('auth_response', {
+        'status': fields.String(description='Login status description'),
+        'message': fields.String(description='login response message'),
+        'Authorization': fields.String(description='JWT', nullable=True)
+    })
 
 def numeric_list(value):
     """

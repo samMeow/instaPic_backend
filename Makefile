@@ -20,8 +20,10 @@ run:
 	python manage.py run
 
 db-up:
-	python manage.py db init
-	python manage.py db migrate -m 'init DB'
 	python manage.py db upgrade
+
+deploy:
+	heroku container:push --app sammeow-instapic-backend web
+	heroku container:release --app sammeow-instapic-backend web
 
 all: clean install tests run

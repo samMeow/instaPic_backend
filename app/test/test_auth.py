@@ -59,7 +59,6 @@ class TestAuthBlueprint(BaseTestCase):
             response = login_user(self.client)
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'fail')
-            print(data['message'])
             self.assertTrue(
                 data['message'] == 'username or password does not match.')
             self.assertTrue(response.content_type == 'application/json')

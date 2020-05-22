@@ -6,6 +6,7 @@ from ..util.dto import AuthDto
 
 api = AuthDto.api
 user_auth = AuthDto.user_auth
+auth_response = AuthDto.auth_response
 
 
 @api.route('/login')
@@ -16,6 +17,7 @@ class UserLogin(Resource):
     """
     @api.doc('user login')
     @api.expect(user_auth, validate=True)
+    @api.marshal_with(auth_response, skip_none=True)
     def post(self):
         """get the post data"""
         post_data = request.json

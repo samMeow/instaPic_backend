@@ -29,7 +29,8 @@ app.config['MAX_CONTENT_LENGTH'] = 4 * 1024 * 1024
 
 @manager.command
 def run():
-    app.run()
+    PORT = os.getenv('PORT', '5000')
+    app.run(host='0.0.0.0', port=PORT)
 
 
 @manager.command
