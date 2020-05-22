@@ -17,6 +17,14 @@ services:
         networks:
             - instapic-network
 
+    instapic-server:
+        build: .
+        container_name: instapic-server
+        ports:
+            - 5000:5000
+        networks: 
+            - comment-demo-network
+
 networks:
     instapic-network:
         external: 
