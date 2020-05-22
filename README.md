@@ -1,39 +1,29 @@
-#### FLASK RESTFUL API BOILER-PLATE WITH JWT
+# InstaPic-backend
+Hosted: http://sammeow-instapic-backend.herokuapp.com/
 
-### Terminal commands
+## Documentation
+http://sammeow-instapic-backend.herokuapp.com/docs/
 
-    Initial installation: make install
+## Getting started
+### Requirement
+`docker-compose` and `pip`
 
-    To run test: make tests
-
-    To run application: make run
-
-    To run all commands at once : make all
-
-
-### Viewing the app ###
-
-    Open the following url on your browser to view swagger documentation
-    http://127.0.0.1:5000/
-
-
-### Using Postman ####
-
-    Authorization header is in the following format:
-
-    Key: Authorization
-    Value: "token_generated_during_login"
-
-    For testing authorization, url for getting all user requires an admin token while url for getting a single
-    user by public_id requires just a regular authentication.
-
-### Full description and guide ###
-https://medium.freecodecamp.org/structuring-a-flask-restplus-web-service-for-production-builds-c2ec676de563
-
-
-### Contributing
-If you want to contribute to this flask restplus boilerplate, clone the repository and just start making pull requests.
-
+### Start App
+Server will be serving at `localhost:5000`
+```sh
+docker-compose up -d
+make db-up
+# or only db
+docker-compose up -d instapic-db
+make db-up
+make install
+make run
 ```
-https://github.com/cosmic-byte/flask-restplus-boilerplate.git
+
+### others
+```sh
+#lint
+make lint
+# test
+make tests
 ```
