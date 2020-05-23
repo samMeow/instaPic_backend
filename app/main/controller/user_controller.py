@@ -7,6 +7,7 @@ from ..util.decorator import token_required
 
 api = UserDto.api
 _user = UserDto.user
+_user_request = UserDto.user_request
 _user_search = UserDto.user_search
 
 
@@ -22,11 +23,11 @@ class UserList(Resource):
     @api.response(200, 'List of users')
     @api.marshal_list_with(_user, envelope='data')
     def get(self):
-        """List all registered users"""
+        """search user by username"""
         args = _user_search.parse_args()
         return search_user(username=args['username'])
 
-    @api.expect(_user, validate=True)
+    @api.expect(_user_request, validate=True)
     @api.response(201, 'User successfully created.')
     @api.doc('create a new user')
     def post(self):

@@ -8,8 +8,7 @@ class UserDto:
     User Data model
     """
     api = Namespace('user', description='user related operations')
-    user = api.model('user', {
-        'id': fields.Integer(description='user id'),
+    user_request = api.model('user_request', {
         'username': fields.String(
             required=True,
             description='user username',
@@ -22,6 +21,9 @@ class UserDto:
             min_length=6,
             max_length=255
         )
+    })
+    user = api.inherit('user', user_request, {
+        'id': fields.Integer(description='user id'),
     })
     user_search = api.parser()
     user_search.add_argument('username', location='args', type=str)
