@@ -6,7 +6,7 @@ import magic
 from werkzeug.datastructures import FileStorage
 
 from app.test.base import BaseTestCase
-from app.test.helper import register_user
+from app.test.helper import register_user, login_user
 from app.main.service.media_helper import MediaHelper
 from app.main.model.user import User
 
@@ -31,14 +31,15 @@ def create_post(client, description, token, filename=None):
     )
 
 # pylint: disable=dangerous-default-value
-def search_post(client, user_ids=[], page_size=20, page_num=0, order='desc'):
+# pylint: disable=too-many-arguments
+def search_post(client, token, user_ids=[], page_size=20, page_num=0, order='desc'):
     url = '/posts?filters[user_ids]={}&page[size]={}&page[number]={}&order={}'.format(
         ','.join([str(u) for u in user_ids]),
         page_size,
         page_num,
         order
     )
-    return client.get(url)
+    return client.get(url, headers={'Authorization': token})
 
 def delete_file_from_post(post):
     for med in post['medias']:
@@ -48,7 +49,8 @@ class TestPostBlueprint(BaseTestCase):
     token = ''
     def setUp(self):
         super(TestPostBlueprint, self).setUp()
-        resp = register_user(self.client)
+        register_user(self.client)
+        resp = login_user(self.client)
         data = json.loads(resp.data.decode())
         self.token = 'Bearer ' + data['Authorization']
 
@@ -95,12 +97,16 @@ class TestPostBlueprint(BaseTestCase):
             self.assertEqual(data['errors']['media'], 'Media can only be image / video')
             self.assertEqual(data['message'], 'Invalid request')
 
+    def test_list_post_non_auth(self):
+        with self.client:
+            resp = search_post(self.client, '')
+            self.assert401(resp)
 
     def test_list_post(self):
         with self.client:
             create_post(self.client, 'a', self.token)
 
-            resp = search_post(self.client)
+            resp = search_post(self.client, self.token)
             data = json.loads(resp.data.decode())
             self.assert200(resp)
             self.assertGreater(len(data['data']), 0)
@@ -111,7 +117,7 @@ class TestPostBlueprint(BaseTestCase):
             create_post(self.client, 'a', self.token)
             create_post(self.client, 'b', self.token)
 
-            resp = search_post(self.client, order='desc')
+            resp = search_post(self.client, self.token, order='desc')
             data = json.loads(resp.data.decode())
             self.assert200(resp)
             self.assertGreater(len(data['data']), 0)
@@ -122,7 +128,7 @@ class TestPostBlueprint(BaseTestCase):
             create_post(self.client, 'a', self.token)
             create_post(self.client, 'b', self.token)
 
-            resp = search_post(self.client, order='asc')
+            resp = search_post(self.client, self.token, order='asc')
             data = json.loads(resp.data.decode())
             self.assert200(resp)
             self.assertGreater(len(data['data']), 0)
@@ -132,7 +138,7 @@ class TestPostBlueprint(BaseTestCase):
         with self.client:
             current_user = User.decode_auth_token(self.token[len('Bearer '):])
             create_post(self.client, 'test_list_post_filter_user_ids', self.token)
-            resp = search_post(self.client, user_ids=[current_user])
+            resp = search_post(self.client, self.token, user_ids=[current_user])
             data = json.loads(resp.data.decode())
             self.assert200(resp)
             self.assertGreater(len(data['data']), 0)
@@ -145,7 +151,7 @@ class TestPostBlueprint(BaseTestCase):
         with self.client:
             create_post(self.client, 'test_list_post_filter_other_user', self.token)
 
-            resp = search_post(self.client, user_ids=[99999999])
+            resp = search_post(self.client, self.token, user_ids=[99999999])
             data = json.loads(resp.data.decode())
             self.assert200(resp)
             self.assertEqual(len(data['data']), 0)

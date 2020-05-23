@@ -13,11 +13,10 @@ class TestAuthBlueprint(BaseTestCase):
         with self.client:
             response = register_user(self.client)
             data = json.loads(response.data.decode())
-            self.assertTrue(data['status'] == 'success')
-            self.assertTrue(data['message'] == 'Successfully registered.')
-            self.assertTrue(data['Authorization'])
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 201)
+            self.assertTrue(data['id'])
+            self.assertTrue(data['username'])
 
     def test_registered_with_already_registered_user(self):
         """ Test registration with already registered username"""
@@ -36,12 +35,6 @@ class TestAuthBlueprint(BaseTestCase):
         with self.client:
             # user registration
             resp_register = register_user(self.client)
-            data_register = json.loads(resp_register.data.decode())
-            self.assertTrue(data_register['status'] == 'success')
-            self.assertTrue(
-                data_register['message'] == 'Successfully registered.'
-            )
-            self.assertTrue(data_register['Authorization'])
             self.assertTrue(resp_register.content_type == 'application/json')
             self.assertEqual(resp_register.status_code, 201)
             # registered user login
@@ -69,11 +62,6 @@ class TestAuthBlueprint(BaseTestCase):
         with self.client:
             # user registration
             resp_register = register_user(self.client)
-            data_register = json.loads(resp_register.data.decode())
-            self.assertTrue(data_register['status'] == 'success')
-            self.assertTrue(
-                data_register['message'] == 'Successfully registered.')
-            self.assertTrue(data_register['Authorization'])
             self.assertTrue(resp_register.content_type == 'application/json')
             self.assertEqual(resp_register.status_code, 201)
             # user login
@@ -103,11 +91,6 @@ class TestAuthBlueprint(BaseTestCase):
         with self.client:
             # user registration
             resp_register = register_user(self.client)
-            data_register = json.loads(resp_register.data.decode())
-            self.assertTrue(data_register['status'] == 'success')
-            self.assertTrue(
-                data_register['message'] == 'Successfully registered.')
-            self.assertTrue(data_register['Authorization'])
             self.assertTrue(resp_register.content_type == 'application/json')
             self.assertEqual(resp_register.status_code, 201)
             # user login

@@ -5,7 +5,7 @@ import json
 from app.main import db
 from app.test.base import BaseTestCase
 from app.main.model.user import User
-from app.test.helper import register_user
+from app.test.helper import register_user, login_user
 
 def create_user(username):
     new_user = User(
@@ -20,7 +20,8 @@ class TestUserBlueprint(BaseTestCase):
     token = ''
     def setUp(self):
         super(TestUserBlueprint, self).setUp()
-        resp = register_user(self.client)
+        register_user(self.client)
+        resp = login_user(self.client)
         data = json.loads(resp.data.decode())
         self.token = 'Bearer ' + data['Authorization']
 

@@ -2,7 +2,7 @@ from flask import request
 from flask_restplus import Resource
 
 from ..util.dto import UserDto
-from ..service.user_service import save_new_user, search_user, get_a_user
+from ..service.user_service import UserService
 from ..util.decorator import token_required
 
 api = UserDto.api
@@ -25,15 +25,20 @@ class UserList(Resource):
     def get(self):
         """search user by username"""
         args = _user_search.parse_args()
-        return search_user(username=args['username'])
+        return UserService.search_user(username=args['username'])
 
     @api.expect(_user_request, validate=True)
     @api.response(201, 'User successfully created.')
     @api.doc('create a new user')
+    @api.marshal_with(_user, skip_none=True)
     def post(self):
         """Creates a new User"""
         data = request.json
-        return save_new_user(data=data)
+        response, status = UserService.save_new_user(data=data)
+        if status != 201:
+            api.abort(status, response['message'], status=response['status'])
+        return response, 201
+
 
 
 @api.route('/<id>')
@@ -44,11 +49,12 @@ class User(Resource):
     """
     User detail Route
     """
+    @token_required
     @api.doc('get a user')
-    @api.marshal_with(_user)
+    @api.marshal_with(_user, skip_none=True)
     def get(self, user_id):
         """get a user given its identifier"""
-        user = get_a_user(user_id)
+        user = UserService.get_a_user(user_id)
         if not user:
             return api.abort(404)
         return user

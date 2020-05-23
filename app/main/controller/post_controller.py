@@ -19,12 +19,13 @@ class PostList(Resource):
     """
     Post list route
     """
+    @token_required
     @api.expect(_post_search, validate=True)
     @api.doc('list all post')
     @api.response(200, 'list of posts with pagination meta')
     @api.marshal_with(_post_list)
     def get(self):
-        """List all registered users"""
+        """List all post"""
         args = _post_search.parse_args()
         # not using sqlalchemy pagination as it use (slow) count query
         data = PostService.list_post(
