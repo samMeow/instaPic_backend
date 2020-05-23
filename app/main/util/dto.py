@@ -51,7 +51,8 @@ class AuthDto:
     auth_response = api.model('auth_response', {
         'status': fields.String(description='Login status description'),
         'message': fields.String(description='login response message'),
-        'Authorization': fields.String(description='JWT', nullable=True)
+        'Authorization': fields.String(description='JWT', skip_none=True),
+        'user': fields.Nested(UserDto.user, description='user', skip_none=True)
     })
 
 def numeric_list(value):
