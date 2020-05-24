@@ -40,7 +40,8 @@ class ProductionConfig(Config):
 config_by_name = dict(
     dev=DevelopmentConfig,
     test=TestingConfig,
-    prod=ProductionConfig
+    prod=ProductionConfig,
+    docker=DevelopmentConfig
 )
 
 key = Config.SECRET_KEY
