@@ -50,7 +50,7 @@ class PostService:
         if limit:
             query = query.limit(limit)
         if offset:
-            query = query.limit(offset)
+            query = query.offset(offset)
 
         return query.options(lazyload('user'), lazyload('medias')).all()
 
