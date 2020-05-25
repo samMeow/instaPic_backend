@@ -78,14 +78,15 @@ class Auth:
             resp = User.decode_auth_token(remove_prefix(auth_token, 'Bearer '))
             if not isinstance(resp, str):
                 user = User.query.filter_by(id=resp).first()
-                response_object = {
-                    'status': 'success',
-                    'data': {
-                        'user_id': user.id,
-                        'username': user.username
+                if user:
+                    response_object = {
+                        'status': 'success',
+                        'data': {
+                            'user_id': user.id,
+                            'username': user.username
+                        }
                     }
-                }
-                return response_object, 200
+                    return response_object, 200
             response_object = {
                 'status': 'fail',
                 'message': resp

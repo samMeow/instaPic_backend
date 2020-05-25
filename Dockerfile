@@ -10,4 +10,4 @@ RUN pip install -r requirements.txt
 
 COPY . /app
 
-CMD gunicorn -b :$PORT manage:app
+CMD gunicorn -w 4 -b :$PORT manage:app
