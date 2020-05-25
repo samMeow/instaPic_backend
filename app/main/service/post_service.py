@@ -15,8 +15,10 @@ class PostService:
         Validate Post request
         """
         errors = {}
+        if len(data['description']) < 1:
+            errors['description'] = 'Description too short (<1 characters)'
         if len(data['description']) > 4000:
-            errors['description'] = 'Description too long (>4000 character)'
+            errors['description'] = 'Description too long (>4000 characters)'
         if data['media'] and data['media'].filename == '':
             errors['media'] = 'Media should have a valid filename'
         elif data['media']:

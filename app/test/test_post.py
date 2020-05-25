@@ -97,6 +97,15 @@ class TestPostBlueprint(BaseTestCase):
             self.assertEqual(data['errors']['media'], 'Media can only be image / video')
             self.assertEqual(data['message'], 'Invalid request')
 
+    def test_create_post_too_short(self):
+        with self.client:
+            resp = create_post(self.client, '', self.token)
+            data = json.loads(resp.data.decode())
+            self.assert400(resp)
+            self.assertEqual(data['errors']['description'], 'Description too short (<1 characters)')
+            self.assertEqual(data['message'], 'Invalid request')
+
+
     def test_list_post_non_auth(self):
         with self.client:
             resp = search_post(self.client, '')
@@ -104,13 +113,13 @@ class TestPostBlueprint(BaseTestCase):
 
     def test_list_post(self):
         with self.client:
-            create_post(self.client, 'a', self.token)
+            create_post(self.client, 'aaaa', self.token)
 
             resp = search_post(self.client, self.token)
             data = json.loads(resp.data.decode())
             self.assert200(resp)
             self.assertGreater(len(data['data']), 0)
-            self.assertIn('a', [p['description'] for p in data['data']])
+            self.assertIn('aaaa', [p['description'] for p in data['data']])
 
     def test_list_post_desc_order(self):
         with self.client:
